@@ -53,10 +53,31 @@ if img_data is not None:
     
     # Display uploaded image
     uploaded_img = Image.open(img_data)
+    
+    ########################################################################
+    open_image = uploaded_img
+    
+    out_file = BytesIO()
+    if(open_image.mode != 'CMYK'):
+        if(open_image.format == 'JPEG'):
+            open_image.save(out_file, 'png')
+            img = np.array(Image.open(out_file))
+            
+        else:
+            img = np.array(open_image)
+    else:
+        open_image.convert('RGB').save(out_file, 'png')
+        img = np.array(Image.open(out_file))
+    
     st.title('Image with White Background')
-    st.image(uploaded_img)
+    st.image(img)
+    img11 = img
+############################################################################
+    
+    #st.title('Image with White Background')
+    #st.image(uploaded_img)
 
-    img = np.array(uploaded_img)
+    #img = np.array(uploaded_img)
     #img = Image.fromarray(uploaded_img)
     #img = cv2.imread(img_data)
     image_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -75,7 +96,7 @@ if img_data is not None:
     
     # GRABCUT the image from the mask
     
-    img11 = np.asarray(uploaded_img)
+    #img11 = np.asarray(uploaded_img)
     img1 = cv2.cvtColor(img11, cv2.COLOR_RGBA2RGB)
     newmask = masked
     
